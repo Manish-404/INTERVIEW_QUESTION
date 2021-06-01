@@ -1,0 +1,53 @@
+Max Area of Island:-
+
+You are given an m x n binary matrix grid. An island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical.) 
+You may assume all four edges of the grid are surrounded by water.
+The area of an island is the number of cells with a value 1 in the island.
+Return the maximum area of an island in grid. If there is no island, return 0.
+
+Example 1:
+Input: grid = [[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]
+Output: 6
+Explanation: The answer is not 11, because the island must be connected 4-directionally.
+
+Example 2:
+Input: grid = [[0,0,0,0,0,0,0,0]]
+Output: 0
+_________________________________________________________________________________________________________________________________________________
+class Solution {
+    public int maxAreaOfIsland(int[][] grid) {
+        if(grid==null || grid.length==0) return 0;
+        int res=0;
+        int curr=0;
+        for(int i=0; i<grid.length; i++){
+            for(int j=0; j<grid[0].length; j++){
+                if(grid[i][j]==1){
+                    grid[i][j]=0;
+                    curr=bfs(grid, i, j);
+                    res=Math.max(curr, res);
+                } 
+            }
+        }
+        return res;
+    }
+    private int bfs(int[][] grid, int k, int l){
+        Queue<int[]> q=new LinkedList<>();
+        q.offer(new int[]{k, l});
+        int res=0;
+        
+        while(!q.isEmpty()){
+            int[] curr=q.poll();
+            res++;
+            final int[][] neigs=new int[][]{{-1,0}, {1,0}, {0,-1}, {0,1}};
+            for(int[] neig : neigs){
+                int i=curr[0]+neig[0];
+                int j=curr[1]+neig[1];
+                if(i>=0 && i<grid.length && j>=0 && j<grid[0].length && grid[i][j]==1){
+                    grid[i][j]=0;
+                    q.offer(new int[]{i, j});
+                }
+            }
+        }
+        return res;
+    }
+}
