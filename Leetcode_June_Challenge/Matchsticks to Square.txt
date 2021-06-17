@@ -1,0 +1,49 @@
+Matchsticks to Square:-
+
+You are given an integer array matchsticks where matchsticks[i] is the length of the ith matchstick. You want to use all the matchsticks to make one square. 
+You should not break any stick, but you can link them up, and each matchstick must be used exactly one time.
+Return true if you can make this square and false otherwise.
+
+Example 1:
+Input: matchsticks = [1,1,2,2,2]
+Output: true
+Explanation: You can form a square with length 2, one side of the square came two sticks with length 1.
+
+Example 2:
+Input: matchsticks = [3,3,3,3,4]
+Output: false
+Explanation: You cannot find a way to form a square with all the matchsticks.
+_____________________________________________________________________________________________________________________________________________________
+class Solution {
+    public boolean makesquare(int[] matchsticks) {
+        if(matchsticks.length<4) return false;
+        
+        int perimeter=0;
+        for(int el : matchsticks){
+            perimeter += el;
+        }
+        if(perimeter % 4 != 0) return false;
+        
+        int side=perimeter/4;
+        int[] sides=new int[] {side, side, side, side};
+        
+        return makesquareHelper(matchsticks, 0, sides);
+    }
+    
+    private boolean makesquareHelper(int[] matchsticks, int i, int[] sides){
+        if(i == matchsticks.length){
+            if(sides[0] == 0 && sides[1] == 0 && sides[2] == 0 && sides[3] == 0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        for(int j=0; j<4; j++){
+            if(matchsticks[i]>sides[j]) continue;
+            sides[j] -= matchsticks[i];
+            if(makesquareHelper(matchsticks, i+1, sides)) return true;
+            sides[j] += matchsticks[i];
+        }
+        return false;
+    }
+}
